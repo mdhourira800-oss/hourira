@@ -1,0 +1,3 @@
+/stream/*  http://198.195.239.50:8095/:splat  200
+/img/*     http://198.195.239.50/img/:splat   200
+/*         /index.html                         200

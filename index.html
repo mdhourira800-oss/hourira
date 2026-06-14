@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0a0a0f" />
+  <title>Abu Hourira – Live TV</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.7/dist/hls.min.js"></script>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* Prevent text selection site-wide */
+    * { -webkit-user-select:none; -moz-user-select:none; user-select:none; }
+    input, textarea { -webkit-user-select:text; -moz-user-select:text; user-select:text; }
+    /* Hide page when printing */
+    @media print { body { display:none !important; } }
+  </style>
+</head>
+<body>
+
+  <header class="header" id="header">
+    <nav class="navbar">
+      <div class="nav-logo">
+        <div class="logo-icon"><i class="fas fa-play"></i></div>
+        <span class="logo-text">Abu Hourira</span>
+      </div>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#" class="nav-link active" data-filter="all">All</a></li>
+        <li><a href="#" class="nav-link" data-filter="Sports">Sports</a></li>
+        <li><a href="#" class="nav-link" data-filter="News">News</a></li>
+        <li><a href="#" class="nav-link" data-filter="Bangla">Bangla</a></li>
+        <li><a href="#" class="nav-link" data-filter="Indian Bangla">Indian Bangla</a></li>
+        <li><a href="#" class="nav-link" data-filter="Hindi">Hindi</a></li>
+        <li><a href="#" class="nav-link" data-filter="Kids">Kids</a></li>
+        <li><a href="#" class="nav-link" data-filter="Music">Music</a></li>
+        <li><a href="#" class="nav-link" data-filter="Documentary">Documentary</a></li>
+      </ul>
+      <div class="nav-actions">
+        <div class="search-bar">
+          <i class="fas fa-search search-icon"></i>
+          <input type="text" id="searchInput" class="search-input" placeholder="Search channels..." autocomplete="off" />
+        </div>
+        <button class="search-toggle-btn" id="searchToggleBtn" aria-label="Search"><i class="fas fa-search"></i></button>
+        <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+      </div>
+    </nav>
+    <div class="mobile-search-bar" id="mobileSearchBar">
+      <i class="fas fa-search search-icon"></i>
+      <input type="text" id="mobileSearchInput" class="search-input" placeholder="Search channels..." autocomplete="off" />
+    </div>
+    <div class="ticker-wrap">
+      <div class="ticker-label"><i class="fas fa-mosque"></i></div>
+      <div class="ticker-track">
+        <span class="ticker-text">আজ নামাজ না পড়লে, কাল আফসোস করে লাভ হবে না &nbsp;★&nbsp; নামাজ বাদ দিও না, বন্ধু &nbsp;★&nbsp; জীবন যত কঠিন হোক, আল্লাহর দরজা সবসময় খোলা &nbsp;★&nbsp; WEB SITE DESIGN BY ABU HOURIRA &nbsp;★&nbsp; আজ নামাজ না পড়লে, কাল আফসোস করে লাভ হবে না &nbsp;★&nbsp; নামাজ বাদ দিও না, বন্ধু &nbsp;★&nbsp; জীবন যত কঠিন হোক, আল্লাহর দরজা সবসময় খোলা &nbsp;★&nbsp; WEB SITE DESIGN BY ABU HOURIRA &nbsp;★&nbsp;</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="mobile-nav-menu" id="mobileNavMenu">
+    <a href="#" class="nav-link active" data-filter="all">All Channels</a>
+    <a href="#" class="nav-link" data-filter="Sports">⚽ Sports</a>
+    <a href="#" class="nav-link" data-filter="News">📰 News</a>
+    <a href="#" class="nav-link" data-filter="Bangla">🎭 Bangla</a>
+    <a href="#" class="nav-link" data-filter="Indian Bangla">🎬 Indian Bangla</a>
+    <a href="#" class="nav-link" data-filter="Hindi">🎵 Hindi</a>
+    <a href="#" class="nav-link" data-filter="Kids">🧒 Kids</a>
+    <a href="#" class="nav-link" data-filter="Music">🎶 Music</a>
+    <a href="#" class="nav-link" data-filter="Documentary">🔭 Documentary</a>
+  </div>
+
+  <div class="app-layout" id="appLayout">
+    <main class="player-panel" id="playerPanel">
+      <div class="player-empty" id="playerEmpty">
+        <div class="empty-icon"><i class="fas fa-tv"></i></div>
+        <h2>Pick a Channel</h2>
+        <p>Select any channel from the list to start watching live.</p>
+      </div>
+      <div class="video-wrap" id="videoWrap" style="display:none;">
+        <video id="liveVideo" autoplay playsinline webkit-playsinline></video>
+        <div class="video-overlay" id="videoOverlay">
+          <div class="overlay-top">
+            <div class="overlay-channel-info">
+              <img id="overlayLogo" src="" alt="" class="overlay-logo-img" />
+              <div>
+                <div class="overlay-ch-name" id="overlayChName">–</div>
+                <div class="overlay-live-badge"><span class="pulse-dot"></span> LIVE</div>
+              </div>
+            </div>
+            <button class="ov-btn" id="btnFullscreen" aria-label="Fullscreen"><i class="fas fa-expand" id="fsIcon"></i></button>
+          </div>
+          <div class="overlay-center">
+            <div class="video-spinner" id="videoSpinner"><div class="spinner"></div><p>Loading stream…</p></div>
+            <button class="big-play-btn" id="bigPlayBtn" style="display:none;"><i class="fas fa-play"></i></button>
+          </div>
+          <div class="overlay-bottom">
+            <div class="ctrl-left">
+              <button class="ov-btn" id="btnPlayPause"><i class="fas fa-pause" id="ppIcon"></i></button>
+              <button class="ov-btn" id="btnMute"><i class="fas fa-volume-up" id="muteIcon"></i></button>
+              <input type="range" id="volumeRange" min="0" max="1" step="0.02" value="1" class="vol-slider" />
+              <span class="live-tag"><span class="pulse-dot"></span> LIVE</span>
+            </div>
+            <div class="ctrl-right">
+              <select id="qualitySelect" class="quality-select"></select>
+              <button class="ov-btn" id="btnPip"><i class="fas fa-compress-alt"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="now-playing-bar" id="nowPlayingBar" style="display:none;">
+        <img id="npLogo" src="" alt="" class="np-logo" />
+        <div class="np-info">
+          <div class="np-name" id="npName">–</div>
+          <div class="np-cat" id="npCat">–</div>
+        </div>
+        <span class="np-live"><span class="pulse-dot"></span> LIVE HD</span>
+      </div>
+    </main>
+
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-head">
+        <div class="filter-tabs" id="filterTabs">
+          <button class="filter-tab active" data-filter="all">All</button>
+          <button class="filter-tab" data-filter="Sports">Sports</button>
+          <button class="filter-tab" data-filter="News">News</button>
+          <button class="filter-tab" data-filter="Bangla">Bangla</button>
+          <button class="filter-tab" data-filter="Indian Bangla">Ind. Bangla</button>
+          <button class="filter-tab" data-filter="Hindi">Hindi</button>
+          <button class="filter-tab" data-filter="Kids">Kids</button>
+          <button class="filter-tab" data-filter="Music">Music</button>
+          <button class="filter-tab" data-filter="Documentary">Doc</button>
+        </div>
+      </div>
+      <ul class="channel-list" id="channelList"></ul>
+    </aside>
+  </div>
+
+  <!-- Mobile fullscreen modal -->
+  <div class="modal-overlay" id="mobileModal">
+    <div class="modal-inner">
+      <button class="modal-close-btn" id="modalCloseBtn"><i class="fas fa-times"></i></button>
+      <div class="modal-video-wrap">
+        <video id="mobileVideo" autoplay playsinline webkit-playsinline></video>
+        <div class="modal-overlay-controls" id="mobileOverlay">
+          <div class="overlay-top">
+            <div class="overlay-channel-info">
+              <img id="mobileOverlayLogo" src="" alt="" class="overlay-logo-img" />
+              <div>
+                <div class="overlay-ch-name" id="mobileChName">–</div>
+                <div class="overlay-live-badge"><span class="pulse-dot"></span> LIVE</div>
+              </div>
+            </div>
+            <button class="ov-btn" id="mobileFsBtn"><i class="fas fa-expand"></i></button>
+          </div>
+          <div class="overlay-center">
+            <div class="video-spinner" id="mobileSpinner"><div class="spinner"></div><p>Loading…</p></div>
+          </div>
+          <div class="modal-bottom-controls">
+            <button class="ov-btn" id="mobilePpBtn"><i class="fas fa-pause" id="mobilePpIcon"></i></button>
+            <button class="ov-btn" id="mobileMuteBtn"><i class="fas fa-volume-up" id="mobileMuteIcon"></i></button>
+            <span class="live-tag" style="flex:1"><span class="pulse-dot"></span> LIVE</span>
+            <button class="ov-btn" id="mobileFullBtn"><i class="fas fa-arrows-alt"></i></button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-now-playing">
+        <div class="np-name" id="modalNpName">–</div>
+        <div class="np-cat" id="modalNpCat">–</div>
+      </div>
+    </div>
+  </div>
+
+  <nav class="mobile-bottom-nav" id="mobileBottomNav">
+    <button class="mob-nav-btn active" data-filter="all"><i class="fas fa-th"></i><span>All</span></button>
+    <button class="mob-nav-btn" data-filter="Sports"><i class="fas fa-futbol"></i><span>Sports</span></button>
+    <button class="mob-nav-btn" data-filter="News"><i class="fas fa-newspaper"></i><span>News</span></button>
+    <button class="mob-nav-btn" data-filter="Bangla"><i class="fas fa-film"></i><span>Bangla</span></button>
+    <button class="mob-nav-btn" data-filter="Hindi"><i class="fas fa-music"></i><span>Hindi</span></button>
+  </nav>
+
+  <script src="script.js?v=9"></script>
+  <noscript><style>body{display:none}</style></noscript>
+</body>
+</html>
